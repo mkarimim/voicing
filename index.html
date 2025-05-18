@@ -5,19 +5,27 @@
 </head>
 <body>
   <h2>Speech Recognition in WebView</h2>
+
+  <label for="language-select">Select Language:</label>
+  <select id="language-select">
+    <option value="fa-IR">Persian (fa)</option>
+    <option value="en-US">English (en)</option>
+    <option value="ar-SA">Arabic (ar)</option>
+  </select>
+
   <button id="start-btn">Start Listening</button>
   <p id="result">Result will appear here</p>
 
   <script>
     const startBtn = document.getElementById('start-btn');
     const resultP = document.getElementById('result');
+    const languageSelect = document.getElementById('language-select');
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       resultP.textContent = "Speech Recognition API not supported.";
     } else {
       const recognition = new SpeechRecognition();
-      recognition.lang = 'en-US';
       recognition.interimResults = false;
 
       recognition.onresult = (event) => {
@@ -30,8 +38,9 @@
       };
 
       startBtn.onclick = () => {
+        recognition.lang = languageSelect.value;
         recognition.start();
-        resultP.textContent = "Listening...";
+        resultP.textContent = "Listening in " + languageSelect.options[languageSelect.selectedIndex].text + "...";
       };
     }
   </script>
