@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Speech Recognition Demo</title>
+</head>
+<body>
+  <h2>Speech Recognition in WebView</h2>
+  <button id="start-btn">Start Listening</button>
+  <p id="result">Result will appear here</p>
+
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const resultP = document.getElementById('result');
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      resultP.textContent = "Speech Recognition API not supported.";
+    } else {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        resultP.textContent = "You said: " + transcript;
+      };
+
+      recognition.onerror = (event) => {
+        resultP.textContent = "Error: " + event.error;
+      };
+
+      startBtn.onclick = () => {
+        recognition.start();
+        resultP.textContent = "Listening...";
+      };
+    }
+  </script>
+</body>
+</html>
