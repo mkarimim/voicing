@@ -1,264 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fantastic Speech Recognition Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
+  <title>🎙️ Voice to Text</title>
+  <!-- Using a simple Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* Basic Reset and Box Model */
-    *, *::before, *::after {
-      box-sizing: border-box;
+    :root {
+        --primary-color: #007bff;
+        --primary-hover: #0056b3;
+        --secondary-color: #6c757d;
+        --secondary-hover: #5a6268;
+        --success-color: #28a745;
+        --success-light: #d4edda;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
+        --info-color: #17a2b8;
+        --light-gray: #f8f9fa;
+        --dark-gray: #343a40;
+        --border-color: #ced4da;
+        --card-background: #ffffff;
+        --text-color: #333;
     }
 
-    /* Body Styling - Background, Font, Centering */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A modern sans-serif font */
-      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); /* Gradient background */
-      color: #333; /* Default text color */
-      line-height: 1.6;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 20px; /* Add some padding around the edge */
+      line-height: 1.6;
+      background-color: var(--light-gray); /* Light background */
+      color: var(--text-color);
       display: flex; /* Use flexbox to center content */
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
+      justify-content: center;
+      align-items: flex-start; /* Align items to the top */
       min-height: 100vh; /* Full viewport height */
     }
 
-    /* Container for the main content */
     .container {
-      background-color: #fff; /* White background for the content box */
-      padding: 40px 30px;
-      border-radius: 10px; /* Rounded corners */
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Soft shadow */
-      max-width: 500px; /* Limit the width */
-      width: 100%; /* Make it responsive */
-      text-align: center; /* Center text and inline elements */
-      opacity: 0.95; /* Slightly transparent */
+        background-color: var(--card-background);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px; /* Max width for better readability */
+        width: 100%; /* Ensure it takes full width on small screens */
+        box-sizing: border-box; /* Include padding in width */
     }
 
-    /* Heading Style */
     h2 {
-      color: #0056b3; /* A deep blue color */
-      margin-top: 0;
-      margin-bottom: 30px;
-      font-size: 1.8em;
+        color: var(--dark-gray);
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 30px;
     }
 
-    /* Label Style */
     label {
-      display: block; /* Make label take its own line */
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #555;
-      text-align: left; /* Align label text left */
+        display: block; /* Label on its own line */
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-gray);
     }
 
-    /* Select (Dropdown) Style */
-    select {
-      display: block; /* Make select take its own line */
-      width: 100%; /* Full width */
-      padding: 10px;
-      margin-bottom: 25px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    select, button {
+      font-family: 'Roboto', sans-serif; /* Apply font to controls */
       font-size: 1rem;
-      background-color: #f9f9f9;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
-      -webkit-appearance: none; /* Remove default arrow in some browsers */
-      -moz-appearance: none;
-      appearance: none;
-      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22292.4%22 height%3D%22292.4%22%3E%3Cpath fill%3D%22%23007bff%22 d%3D%22M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.9 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
-      background-repeat: no-repeat;
-      background-position: right 10px top 50%;
-      background-size: 12px auto;
-    }
-
-    select:hover, select:focus {
-      border-color: #007bff;
-      outline: none;
-    }
-
-    /* Button Style */
-    button {
-      background-color: #007bff; /* Primary blue */
-      color: white;
-      padding: 12px 25px;
-      border: none;
+      padding: 10px 15px; /* More padding */
+      margin-right: 10px; /* Spacing between controls */
+      margin-bottom: 15px; /* Added margin below controls */
       border-radius: 5px;
+      border: 1px solid var(--border-color);
       cursor: pointer;
-      font-size: 1.1em;
-      transition: background-color 0.3s ease, transform 0.1s ease; /* Smooth transitions */
-      margin-bottom: 25px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
     }
 
-    button:hover {
-      background-color: #0056b3; /* Darker blue on hover */
-      transform: translateY(-2px); /* Slight lift effect */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    select {
+        background-color: #fff;
+        /* Basic arrow customization (optional) */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px top 50%;
+        background-size: 12px auto;
+        padding-right: 30px; /* Make space for arrow */
     }
 
-    button:active {
-      background-color: #004085; /* Even darker when active */
-      transform: translateY(0); /* Reset transform */
-      box-shadow: none;
+    button {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
     }
 
-     button:disabled {
-      background-color: #cccccc; /* Grey out when disabled */
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-     }
+    button:hover:not(:disabled) {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    button#stop-btn {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    button#stop-btn:hover:not(:disabled) {
+        background-color: var(--secondary-hover);
+        border-color: var(--secondary-hover);
+    }
 
 
-    /* Result Paragraph Style */
+    button:disabled {
+        opacity: 0.6; /* Slightly more opaque than 0.5 */
+        cursor: not-allowed;
+        background-color: var(--secondary-color); /* Use secondary color for disabled */
+        border-color: var(--secondary-color);
+    }
+
+    #start-btn:disabled {
+         background-color: var(--secondary-color);
+         border-color: var(--secondary-color);
+    }
+
+
+    .status {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        color: var(--text-color);
+        background-color: var(--light-gray);
+        border: 1px solid var(--border-color);
+    }
+
+    .status.listening {
+        background-color: var(--success-light);
+        color: var(--success-color);
+        border-color: var(--success-color);
+        font-weight: 500;
+    }
+
+     .status.error {
+        background-color: #f8d7da; /* Bootstrap danger light */
+        color: var(--danger-color);
+        border-color: var(--danger-color);
+        font-weight: 500;
+    }
+
     #result {
       margin-top: 20px;
-      padding: 15px;
-      border: 2px dashed #007bff; /* Dashed blue border */
+      padding: 15px; /* More padding */
+      border: 1px solid var(--border-color);
       border-radius: 5px;
-      min-height: 3em; /* Ensure some initial height */
-      background-color: #e9f7ff; /* Light blue background */
-      color: #004085; /* Dark blue text */
-      text-align: left; /* Align result text left */
-      word-wrap: break-word; /* Prevent overflow */
-      font-style: italic; /* Initial state often feels like a hint */
+      min-height: 100px; /* Increased min height */
+      background-color: #fefefe; /* Slightly off-white background */
+      white-space: pre-wrap; /* Allow wrapping but preserve spaces */
+      word-wrap: break-word; /* Break long words */
+      overflow-y: auto; /* Add scroll if content overflows */
+      max-height: 300px; /* Optional: limit height and add scroll */
     }
 
-    /* Style when listening */
-    #result.listening {
-        border-color: #28a745; /* Green border when listening */
-        background-color: #d4edda; /* Light green background */
-        color: #155724; /* Dark green text */
-        font-style: normal; /* Remove italic */
-        animation: pulse 1.5s infinite ease-in-out; /* Subtle pulse animation */
-    }
-
-    /* Style for errors */
-    #result.error {
-        border-color: #dc3545; /* Red border for errors */
-        background-color: #f8d7da; /* Light red background */
-        color: #721c24; /* Dark red text */
-        font-style: normal;
-        animation: none; /* Stop animation */
-    }
-
-
-    /* Keyframes for Pulse Animation */
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
-      70% { box-shadow: 0 0 0 15px rgba(0, 123, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
-    }
-
-    /* Add a little spacing below the select */
-    label + select {
-        margin-top: 5px; /* Space between label and select */
-    }
-
-    /* Ensure elements inside container respect text-align left */
-    .container > * {
-        margin-left: auto;
-        margin-right: auto;
-    }
-     .container label, .container select, .container #result {
-        text-align: left;
-        margin-left: 0; /* Override auto margins for these specific elements */
-        margin-right: 0;
+     #result.listening {
+       border-color: var(--success-color); /* Highlight border when listening */
+       box-shadow: 0 0 5px rgba(40, 167, 69, 0.3); /* Subtle glow */
      }
 
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        body {
+            padding: 15px;
+        }
+        .container {
+            padding: 20px;
+        }
+        select, button {
+            width: calc(100% - 20px); /* Full width minus padding */
+            margin-right: 0; /* Remove margin */
+            box-sizing: border-box;
+        }
+        select {
+             margin-bottom: 10px; /* Add space between select and button */
+        }
+        button#stop-btn {
+             margin-right: 0; /* Ensure stop button takes full width too */
+        }
+    }
+
+    /* Adjust button layout on smaller screens */
+     @media (max-width: 400px) {
+        button, select {
+            margin-bottom: 10px;
+        }
+        button:not(:last-child), select {
+             margin-right: 0; /* Stack buttons */
+        }
+    }
 
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Speech Recognition Demo</h2>
+    <h2>🎙️ Voice to Text (Auto Restart)</h2>
 
-    <label for="language-select">Select Language:</label>
-    <select id="language-select">
-      <option value="fa-IR">Persian (فارسی)</option>
-      <option value="en-US" selected>English (US)</option> <!-- Added selected -->
-      <option value="ar-SA">Arabic (العربية)</option>
-       <option value="es-ES">Spanish (Español)</option> <!-- Added more languages -->
-       <option value="fr-FR">French (Français)</option>
-    </select>
+    <div> <!-- Wrap controls for potential flex layout later if needed -->
+        <label for="language">Language:</label>
+        <select id="language">
+            <!-- Added some common languages, feel free to add more -->
+            <option value="en-US">English (US)</option>
+            <option value="ar-SA">Arabic (العربية)</option>
+            <option value="fa-IR">Persian (فارسی)</option>
+            <option value="es-ES">Spanish (Español)</option>
+            <option value="fr-FR">French (Français)</option>
+            <option value="de-DE">German (Deutsch)</option>
+            <option value="zh-CN">Chinese (Mandarin, Simplified)</option>
+            <option value="ru-RU">Russian (Русский)</option>
+        </select>
 
-    <button id="start-btn">Start Listening</button>
+        <button id="start-btn">Start Listening</button>
+        <button id="stop-btn" disabled>Stop</button>
+    </div>
 
-    <p id="result">Click "Start Listening" to begin...</p> <!-- Changed initial text -->
-  </div>
+    <div class="status" id="status">Status: Idle</div>
+
+    <div id="result" role="region" aria-live="polite"></div> <!-- Changed to div, added ARIA attributes -->
+
+  </div> <!-- End container -->
 
   <script>
-    const startBtn = document.getElementById('start-btn');
-    const resultP = document.getElementById('result');
-    const languageSelect = document.getElementById('language-select');
+    const startBtn = document.getElementById("start-btn");
+    const stopBtn = document.getElementById("stop-btn");
+    const languageSelect = document.getElementById("language");
+    const resultDiv = document.getElementById("result"); // Updated to resultDiv
+    const statusDiv = document.getElementById("status");
 
-    // Check for API support first
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
     if (!SpeechRecognition) {
-      resultP.textContent = "Speech Recognition API not supported in this browser.";
-      resultP.classList.add('error'); // Style as error
-      startBtn.disabled = true; // Disable the button
-    } else {
-      const recognition = new SpeechRecognition();
-      recognition.interimResults = false; // We only want the final result
-      recognition.continuous = false; // Stop after a single utterance
-
-      // Event when recognition starts
-      recognition.onstart = () => {
-          resultP.textContent = "Listening in " + languageSelect.options[languageSelect.selectedIndex].text + "...";
-          resultP.classList.remove('error'); // Remove error state if any
-          resultP.classList.add('listening'); // Add listening class for styling
-          startBtn.textContent = "Listening..."; // Change button text
-          startBtn.disabled = true; // Disable button while listening
-      };
-
-      // Event when a result is received
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        resultP.textContent = "You said: " + transcript;
-        resultP.classList.remove('listening'); // Remove listening class
-        resultP.classList.remove('error'); // Remove error class
-      };
-
-      // Event on error
-      recognition.onerror = (event) => {
-        resultP.textContent = "Error: " + event.error + ". Please try again.";
-        resultP.classList.remove('listening'); // Remove listening class
-        resultP.classList.add('error'); // Add error class for styling
-      };
-
-       // Event when recognition ends (either successful or due to inactivity/error)
-       recognition.onend = () => {
-           // Only reset button/state if not already reset by result/error
-           if (startBtn.disabled) {
-                startBtn.textContent = "Start Listening"; // Reset button text
-                startBtn.disabled = false; // Enable button
-           }
-           // If it ended without a result or explicit error message, show a default
-           if (resultP.textContent.startsWith("Listening in") || resultP.textContent === "Click \"Start Listening\" to begin...") {
-                resultP.textContent = "Listening ended. No speech detected or activity timeout.";
-                 resultP.classList.remove('listening');
-           }
-       };
-
-
-      // Button click handler
-      startBtn.onclick = () => {
-        resultP.textContent = "Starting recognition..."; // Immediate feedback
-        resultP.classList.remove('listening', 'error'); // Reset classes
-        recognition.lang = languageSelect.value; // Set language
-        recognition.start(); // Start listening
-        // The onstart event will update the text further
-      };
-
-      // Set initial text on load
-      resultP.textContent = "Click \"Start Listening\" to begin...";
+      statusDiv.innerText = "Status: Error - Browser does not support Speech Recognition.";
+      statusDiv.classList.add("error"); // Add error class
+      // alert("Sorry, your browser does not support Speech Recognition."); // Removed alert for better UX
+      startBtn.disabled = true;
+      stopBtn.disabled = true;
+      languageSelect.disabled = true; // Disable select too
+      // Don't throw error immediately, let the user see the message
+      console.error("SpeechRecognition API not supported in this browser.");
+      // throw new Error("SpeechRecognition not supported"); // Remove throw to keep page functional
     }
+
+    let recognition = null; // Initialize as null
+    let finalTranscript = "";
+    let shouldRestart = false;
+    let isListening = false; // Track actual listening state
+
+    // Function to update status text and class
+    function updateStatus(message, statusType = "idle") {
+        statusDiv.innerText = "Status: " + message;
+        statusDiv.className = 'status ' + statusType; // Reset and add new class
+    }
+
+    function startRecognition() {
+      if (isListening) {
+        console.log("Recognition already running, skipping start.");
+        return;
+      }
+
+      console.log("Attempting to start recognition...");
+      updateStatus("Starting...", "info"); // Use info status for starting
+
+      // Create a new recognition instance each time to avoid potential issues
+      recognition = new SpeechRecognition();
+      recognition.interimResults = true;
+      // Continuous mode depends on browser support and language.
+      // Some browsers/languages are more reliable with non-continuous (like fa-IR)
+      // Let's make it continuous by default, users can test if it works well.
+      recognition.continuous = languageSelect.value !== 'fa-IR'; // Keeping it continuous generally improves flow
+      recognition.lang = languageSelect.value; // Set selected language
+      recognition.maxAlternatives = 1;
+
+      // Event handlers
+      recognition.onstart = () => {
+        isListening = true;
+        console.log("Recognition started.");
+        updateStatus("Listening...", "listening"); // Use listening status class
+        resultDiv.classList.add("listening"); // Add listening class to result
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        languageSelect.disabled = true; // Disable language selection while listening
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = "";
+        // Build the interim transcript from the latest results
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + " "; // Add final results to the cumulative transcript
+          } else {
+            interimTranscript += transcript; // Keep interim separate
+          }
+        }
+        // Display cumulative final results + current interim results
+        resultDiv.innerText = finalTranscript + interimTranscript;
+        // Optional: Scroll to bottom if content overflows (improved)
+        resultDiv.scrollTop = resultDiv.scrollHeight;
+        // console.log("Interim:", interimTranscript, "Final:", finalTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        updateStatus("Error: " + event.error, "error"); // Use error status class
+
+        // Common errors that might require restart or indicate a problem
+        if (event.error === 'no-speech' || event.error === 'audio-capture' || event.error === 'network') {
+             console.log(`Error "${event.error}" occurred.`);
+             if (shouldRestart) {
+                 console.log("Attempting restart after error...");
+                 // Small delay before restarting
+                 setTimeout(() => restartRecognition(), 500);
+             } else {
+                  // If not auto-restarting, ensure UI is reset
+                  isListening = false;
+                  resultDiv.classList.remove("listening");
+                  startBtn.disabled = false;
+                  stopBtn.disabled = true;
+                  languageSelect.disabled = false; // Enable language select again
+                  updateStatus("Idle"); // Reset status
+             }
+        } else if (event.error === 'not-allowed') {
+             // User denied microphone access
+             alert("Microphone access denied. Please allow microphone permissions in your browser settings.");
+             shouldRestart = false; // Cannot restart if permission denied
+             isListening = false;
+             resultDiv.classList.remove("listening");
+             startBtn.disabled = true; // Disable start button if access is denied
+             stopBtn.disabled = true; // Stop button might already be disabled
+             languageSelect.disabled = false;
+             updateStatus("Permission Denied", "error");
+
+        } else {
+            // Other errors (e.g., abrupt-close) might trigger onend immediately after onerror
+            // Let onend handle the cleanup if shouldRestart is false.
+            // If shouldRestart is true, onend will call restartRecognition().
+             console.log("Non-critical error or handled by onend:", event.error);
+             isListening = false; // Ensure flag is reset on error regardless
+        }
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        console.log("Recognition ended. Should restart:", shouldRestart);
+
+        resultDiv.classList.remove("listening"); // Remove listening indicator
+
+        if (shouldRestart) {
+          // Recognition ended but we want it to continue (due to timeout, no-speech, etc.)
+          updateStatus("Restarting...", "info"); // Indicate restart attempt
+          console.log("Recognition ended, attempting restart...");
+           // Small delay before starting the new instance to prevent rapid cycling
+          startRecognition()
+            // setTimeout(() => , 100); // Call startRecognition directly
+        } else {
+          // Recognition ended because stop was called or a fatal error occurred without restart flag
+          updateStatus("Idle");
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          languageSelect.disabled = false; // Enable language select again
+        }
+      };
+
+      // --- Start the recognition ---
+      try {
+          recognition.start();
+      } catch (error) {
+          console.error("Failed to start recognition:", error);
+          updateStatus("Start failed: " + error.message, "error");
+          isListening = false; // Ensure flag is false if start fails
+          shouldRestart = false; // Prevent restart loop if initial start fails
+
+          // Reset UI elements as start failed
+          resultDiv.classList.remove("listening");
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          languageSelect.disabled = false;
+      }
+    }
+
+    // No longer need a separate restartRecognition function that calls stop,
+    // because onend handles the restart based on shouldRestart flag.
+    // The only place we might need to manually stop is on button click or language change.
+
+
+    // --- Button Event Listeners ---
+
+    startBtn.onclick = () => {
+      console.log("Start button clicked.");
+      if (isListening) {
+          console.log("Already listening, ignoring start click.");
+          return; // Prevent starting multiple times
+      }
+      finalTranscript = ""; // Clear previous text
+      resultDiv.innerText = ""; // Clear result display
+      shouldRestart = true; // Set flag to enable auto-restart
+      startRecognition(); // Initiate the first start
+    };
+
+    stopBtn.onclick = () => {
+      console.log("Stop button clicked.");
+      shouldRestart = false; // Set flag to disable auto-restart
+      // The onend event will handle the UI cleanup because shouldRestart is now false
+      if (recognition && isListening) {
+          updateStatus("Stopping...");
+          recognition.stop(); // This will trigger the onend event
+          recognition = null; // Clear the recognition object reference
+      } else {
+          // If not currently listening but UI needs reset
+          isListening = false;
+          updateStatus("Idle");
+          resultDiv.classList.remove("listening");
+          startBtn.disabled = false;
+          stopBtn.disabled = true;
+          languageSelect.disabled = false;
+      }
+    };
+
+    // Handle language change
+    languageSelect.onchange = () => {
+        console.log("Language changed to:", languageSelect.value);
+        // If recognition is active, stop it. onend will attempt restart if shouldRestart is true.
+        // We ensure shouldRestart is true before stopping if we *want* it to restart
+        // with the new language. Otherwise, if user clicks stop *then* changes language,
+        // it won't restart.
+        if (isListening || shouldRestart) {
+            console.log("Recognition is active, attempting restart with new language.");
+            // shouldRestart should remain true if the user wants continuous listening
+            // after changing language.
+            // Stop the current session. onend will then call startRecognition()
+            // which will pick up the new language value from the select.
+            updateStatus("Language changed. Restarting...", "info");
+            if (recognition && isListening) {
+                 recognition.stop();
+                 recognition = null; // Clear reference
+            } else if (shouldRestart) {
+                 // If not technically 'listening' but in a restart loop (e.g. after error)
+                 // and user changes language, manually trigger a restart attempt
+                 // after ensuring shouldRestart is true (which it should be if it was looping).
+                 // Clear any pending timeouts first for safety if needed, but simple setTimeout
+                 // after a check is usually fine.
+                 console.log("Was in restart loop, attempting manual restart with new lang.");
+                 setTimeout(() => startRecognition(), 100);
+            }
+        }
+        // If not listening and not in a restart loop, simply changing the select
+        // sets the language for the next start. No action needed here.
+    };
+
+    // Initial check on page load
+    if (!SpeechRecognition) {
+        // UI elements are already disabled and error message shown
+    } else {
+        // Enable start button if API is supported
+        startBtn.disabled = false;
+        stopBtn.disabled = true; // Stop button is initially disabled
+        languageSelect.disabled = false; // Language select is initially enabled
+        updateStatus("Idle");
+    }
+
+
   </script>
 </body>
 </html>
